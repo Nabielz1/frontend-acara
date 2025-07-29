@@ -1,19 +1,28 @@
 import environment from "@/config/environment"
 import axios from "axios";
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+
+interface CustomSession extends Session {
+    accessToken?: string;
+}
 
 const headers = {
     "Content-Type": "application/json",
-}
+};
 
 const instance = axios.create({
   baseURL: environment.API_URL,
   headers,
-  timeout: 10000, // 10 seconds timeout
+  timeout: 60 * 1000, // 10 seconds timeout
 });
 
 instance.interceptors.request.use(
     async (request) => {
-        // You can add any request modifications here if needed
+        const session: CustomSession | null = await getSession();
+        if(session && session.accessToken) {
+            request.headers.Authorization = `Bearer ${session.accessToken}`;
+        }
         return request;
     },
     (error) => Promise.reject(error)
