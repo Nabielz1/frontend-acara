@@ -2,8 +2,8 @@ import PageHead from "@/components/commons/PageHead";
 import { ReactNode } from "react";
 
 interface PropTypes {
-  children: ReactNode;
   title?: string;
+  children: ReactNode;
 }
 
 const AuthLayout = (props: PropTypes) => {
